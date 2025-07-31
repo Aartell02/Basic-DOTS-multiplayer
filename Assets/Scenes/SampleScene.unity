@@ -432,7 +432,7 @@ GameObject:
   - component: {fileID: 1420304268}
   - component: {fileID: 1420304269}
   m_Layer: 0
-  m_Name: CameraTarget
+  m_Name: Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -616,13 +616,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  offset: {x: 0, y: 5, z: -10}
+  offset: {x: 0, y: 4, z: -10}
+  smoothSpeed: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1420304268}
   - {fileID: 1585942946}
+  - {fileID: 1420304268}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 824034073}

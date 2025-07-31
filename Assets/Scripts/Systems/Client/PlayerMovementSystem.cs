@@ -44,9 +44,9 @@ public partial struct PlayerMovementSystem : ISystem
         }
     } 
 }
-/*
+
 [UpdateInGroup(typeof(PresentationSystemGroup), OrderFirst = true)]
-[WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
+
 public partial struct PlayerAnimatorSyncSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)
@@ -68,8 +68,7 @@ public partial struct PlayerAnimatorSyncSystem : ISystem
         {
             animatorReference.Animator.SetFloat("Speed", moveSpeed.moveSpeed);
         }
-
-
+        // 
         foreach (var (animatorReference, entity) in
             SystemAPI.Query<PlayerAnimatorReference>().WithNone<PlayerGOPrefab, LocalTransform>().WithEntityAccess())
         {
@@ -79,5 +78,5 @@ public partial struct PlayerAnimatorSyncSystem : ISystem
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
     }
-}*/
+}
 #endif

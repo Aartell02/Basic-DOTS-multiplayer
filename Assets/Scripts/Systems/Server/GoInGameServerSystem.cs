@@ -7,6 +7,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+using Unity.NetCode.Hybrid;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 public partial struct GoInGameServerSystem : ISystem
@@ -35,15 +36,15 @@ public partial struct GoInGameServerSystem : ISystem
             Debug.Log($"Spawned player entity: {playerEntity.Index}");
             
             // Set initial position
-            entityCommandBuffer.SetComponent(playerEntity, LocalTransform.FromPosition(new float3(UnityEngine.Random.Range(-10, +10), 0, 0)));
+            entityCommandBuffer.SetComponent(playerEntity, LocalTransform.FromPosition(new float3(UnityEngine.Random.Range(-10, +10),+2, 0)));
             
             // Set network ownership
             NetworkId networkId = SystemAPI.GetComponent<NetworkId>(receiveRpcCommandRequest.ValueRO.SourceConnection);
             entityCommandBuffer.SetComponent(playerEntity, new GhostOwner
             {
                 NetworkId = networkId.Value,
+                
             });
-
             // Add to linked entity group for cleanup
             entityCommandBuffer.AppendToBuffer(receiveRpcCommandRequest.ValueRO.SourceConnection, new LinkedEntityGroup
             {
@@ -55,5 +56,4 @@ public partial struct GoInGameServerSystem : ISystem
         entityCommandBuffer.Playback(state.EntityManager);
     }
 }
-
 #endif

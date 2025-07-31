@@ -28,6 +28,7 @@ public partial struct MoveCameraSystem : ISystem
         foreach(var(transform,cameraTarget) 
             in SystemAPI.Query<LocalToWorld,CameraTarget>().WithAll<PlayerTag>().WithNone<InitializeCameraTargetTag>())
         {
+            Debug.Log($"camera{state.DebugName}");
             cameraTarget.CameraTransform.Value.position = transform.Position;
             
             //Also set up the camera's FollowTarget component if it exists
@@ -42,6 +43,22 @@ public partial struct MoveCameraSystem : ISystem
                 }
             }
             
+        }
+        foreach (var (playerPrefab, entity) 
+            in SystemAPI.Query<PlayerGOPrefab>().WithEntityAccess())
+        {
+            Debug.Log($"gameobjcet{state.DebugName}");
+            var go = playerPrefab;
+            if (go != null)
+            {
+                var transform = go.Prefab.transform;
+                          // Dodatkowo ustaw kamerê g³ówn¹
+                var camera = Camera.main;
+                if (camera != null)
+                {
+                    transform = camera.transform;
+                }
+            }
         }
     }
 }
