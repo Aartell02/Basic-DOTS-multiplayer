@@ -615,7 +615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc9d7d075f232934da9d3779c8824e54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1420304268}
+  target: {fileID: 0}
   offset: {x: 0, y: 5, z: -10}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

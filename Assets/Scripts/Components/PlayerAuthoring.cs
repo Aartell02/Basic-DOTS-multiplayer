@@ -48,7 +48,7 @@ public struct PlayerMoveSpeed : IComponentData
 }
 public struct InitializePlayerTag : IComponentData, IEnableableComponent { }
 public struct PlayerTag : IComponentData { }
-public struct InitializeCameraTargetTag : IComponentData { }
+public struct InitializeCameraTargetTag : IComponentData, IEnableableComponent { }
 public struct CameraTarget : IComponentData
 {
     public UnityObjectRef<Transform> CameraTransform;

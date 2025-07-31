@@ -2,7 +2,6 @@
 using Unity.NetCode;
 using Unity.Transforms;
 using UnityEngine;
-using Graphical;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -14,7 +13,6 @@ public partial struct GoInGameServerSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
-        state.RequireForUpdate<ExecuteAnimationWithGameObjects>();
         state.RequireForUpdate<GoInGameRequestRpc>();
         state.RequireForUpdate<NetworkId>();
     }

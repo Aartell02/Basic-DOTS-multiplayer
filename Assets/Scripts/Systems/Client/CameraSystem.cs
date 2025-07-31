@@ -8,25 +8,16 @@ using Unity.VisualScripting;
 [UpdateInGroup(typeof(InitializationSystemGroup))] 
 public partial struct CameraInitializationSystem : ISystem
 {
-    public void OnCreate(ref SystemState state)
-    {
-        state.RequireForUpdate<InitializeCameraTargetTag>();
-    }
     public void OnUpdate(ref SystemState state)
     {
         if (CameraTargetSingleton.Instance == null) return;
         var cameraTargetTransform = CameraTargetSingleton.Instance.transform;
-
-        var ecb = new EntityCommandBuffer(state.WorldUpdateAllocator);
-
-        foreach (var ( cameraTarget, entity) 
-            in SystemAPI.Query<RefRW<CameraTarget>>().WithAll<InitializeCameraTargetTag, PlayerTag, GhostOwnerIsLocal>().WithEntityAccess())
+        foreach (var (cameraTarget, shouldInitialize, entity) 
+            in SystemAPI.Query<RefRW<CameraTarget>, EnabledRefRW<InitializeCameraTargetTag>>().WithAll<GhostOwnerIsLocal>().WithEntityAccess())
         {
             cameraTarget.ValueRW.CameraTransform = cameraTargetTransform;
-            ecb.RemoveComponent<InitializeCameraTargetTag>(entity);
+            shouldInitialize.ValueRW = false;
         }
-
-        ecb.Playback(state.EntityManager);
     }
 }
 [UpdateAfter(typeof(TransformSystemGroup))]
@@ -39,7 +30,8 @@ public partial struct MoveCameraSystem : ISystem
         {
             cameraTarget.CameraTransform.Value.position = transform.Position;
             
-            // Also set up the camera's FollowTarget component if it exists
+            //Also set up the camera's FollowTarget component if it exists
+
             var camera = Camera.main;
             if (camera != null)
             {
@@ -49,6 +41,7 @@ public partial struct MoveCameraSystem : ISystem
                     followTarget.target = cameraTarget.CameraTransform.Value;
                 }
             }
+            
         }
     }
 }

@@ -37,9 +37,9 @@ public partial struct PlayerInitializationSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)
     {
-        foreach (var (physicMass, shouldInitialize) in SystemAPI.Query<RefRW<PhysicsMass>, EnabledRefRW<InitializePlayerTag>>())
+        foreach (var (physicMass, shouldInitialize,entity) in SystemAPI.Query<RefRW<PhysicsMass>, EnabledRefRW<InitializePlayerTag>>().WithEntityAccess())
         {
-            Debug.Log($"PHYSICS UPDATE");
+            Debug.Log($"PHYSICS UPDATE {entity.Index}");
             physicMass.ValueRW.InverseInertia = float3.zero;
             shouldInitialize.ValueRW = false;
         }
