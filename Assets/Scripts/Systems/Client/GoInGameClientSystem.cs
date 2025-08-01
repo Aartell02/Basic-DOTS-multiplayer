@@ -33,7 +33,4 @@ public partial struct GoInGameClientSystem : ISystem
     }
 }
 
-public struct GoInGameRequestRpc : IRpcCommand
-{
-
-}
+public struct GoInGameRequestRpc : IRpcCommand{ }

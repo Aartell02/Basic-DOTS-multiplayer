@@ -9,7 +9,6 @@ using UnityEngine;
 [UpdateInGroup(typeof(InitializationSystemGroup))] 
 public partial struct CameraInitializationSystem : ISystem
 {
-    //
     public void OnUpdate(ref SystemState state)
     {
         if (CameraTargetSingleton.Instance == null) return;
@@ -17,7 +16,7 @@ public partial struct CameraInitializationSystem : ISystem
         foreach (var (cameraTarget, shouldInitialize, entity) 
             in SystemAPI.Query<RefRW<CameraTarget>, EnabledRefRW<InitializeCameraTargetTag>>().WithAll<GhostOwnerIsLocal>().WithEntityAccess())
         {
-            //cameraTarget.ValueRW.CameraTransform = cameraTargetTransform;
+            cameraTarget.ValueRW.CameraTransform = cameraTargetTransform;
             shouldInitialize.ValueRW = false;
         }
     }
@@ -39,7 +38,6 @@ public partial struct MoveCameraSystem : ISystem
             }
             //Debug.Log($"camera{state.DebugName}");
             cameraTarget.CameraTransform.Value.position = transform.Position;
-            
             //Set up the camera's FollowTarget component if it exists
             var camera = Camera.main;
             if (camera != null)

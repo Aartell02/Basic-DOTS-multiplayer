@@ -24,15 +24,6 @@ public class Baker : Baker<PlayerAuthoring>
         AddComponent<PlayerTag>(entity);
         AddComponent<InitializeCameraTargetTag>(entity);
         AddComponent<CameraTarget>(entity);
-
-        /*GameObject selectedGO = (networkId.Value % 2 == 0)
-            ? entitiesReferences.characterPrefabA
-            : entitiesReferences.characterPrefabB;
-
-        AddComponentObject(entity, new PlayerGOPrefab
-        {
-            Prefab = authoring.characterPrefabA
-        });*/
         AddComponentObject(entity, new PlayerGOPrefabSelector
         {
             PrefabA = authoring.characterPrefabA,
@@ -42,8 +33,6 @@ public class Baker : Baker<PlayerAuthoring>
         {
             inputVector = float2.zero
         });
-
-
         AddComponent(entity, new PlayerSpeed
         {
             currentSpeed = 0f,
@@ -54,6 +43,7 @@ public class Baker : Baker<PlayerAuthoring>
 }
 public struct PlayerSpeed : IComponentData
 {
+    //sync data for animation
     [GhostField] public float currentSpeed;
     public float maxSpeed;
     public float acceleration;

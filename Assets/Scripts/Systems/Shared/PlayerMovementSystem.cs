@@ -10,10 +10,8 @@ using UnityEngine;
 using UnityEngine.Windows;
 
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
-[BurstCompile]
 public partial struct PlayerMovementSystem : ISystem
 {
-    [BurstCompile]
     public void OnStart(ref SystemState state)
     {
         state.RequireForUpdate<LocalTransform>();
@@ -21,7 +19,6 @@ public partial struct PlayerMovementSystem : ISystem
         state.RequireForUpdate<PlayerAnimatorReference>();
         state.RequireForUpdate<PlayerTransformReference>();
     }
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
 

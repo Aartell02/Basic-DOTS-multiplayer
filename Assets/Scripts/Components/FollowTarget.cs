@@ -1,18 +1,18 @@
 
+using System;
 using UnityEngine;
 
 public class FollowTarget : MonoBehaviour
 {
+    [NonSerialized]
     public Transform target;     
     public Vector3 offset = new Vector3(0, 5, -10);
-    public float smoothSpeed = 5f;
-
+    //After Movement
     void LateUpdate()
     {
         if (target != null)
         {
-            Vector3 desiredPosition = target.position + offset;
-            transform.position = desiredPosition;
+            transform.position = target.position + offset;
         }
     }
 }
