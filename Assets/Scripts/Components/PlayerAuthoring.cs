@@ -2,11 +2,16 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
 using Unity.Physics;
+using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using static EntitiesReferencesBaker;
 
 
 public class PlayerAuthoring : MonoBehaviour 
 {
+    public GameObject characterPrefabA;
+    public GameObject characterPrefabB;
     public float moveSpeed;
 }
 public class Baker : Baker<PlayerAuthoring>
@@ -14,37 +19,65 @@ public class Baker : Baker<PlayerAuthoring>
     public override void Bake(PlayerAuthoring authoring)
     {
         Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-        AddComponent(entity, new PlayerMoveSpeed
+
+        AddComponent<InitializePlayerTag>(entity);
+        AddComponent<PlayerTag>(entity);
+        AddComponent<InitializeCameraTargetTag>(entity);
+        AddComponent<CameraTarget>(entity);
+
+        /*GameObject selectedGO = (networkId.Value % 2 == 0)
+            ? entitiesReferences.characterPrefabA
+            : entitiesReferences.characterPrefabB;
+
+        AddComponentObject(entity, new PlayerGOPrefab
         {
-            moveSpeed = authoring.moveSpeed
+            Prefab = authoring.characterPrefabA
+        });*/
+        AddComponentObject(entity, new PlayerGOPrefabSelector
+        {
+            PrefabA = authoring.characterPrefabA,
+            PrefabB = authoring.characterPrefabB
         });
         AddComponent(entity, new PlayerInputVector
         {
             inputVector = float2.zero
         });
-        AddComponent<InitializePlayerTag>(entity);
-        AddComponent<PlayerTag>(entity);
-        AddComponent<InitializeCameraTargetTag>(entity);
-        AddComponent<CameraTarget>(entity);
-        
-        // Add physics components that aren't automatically added by RigidbodyBaker
-        AddComponent<PhysicsGravityFactor>(entity);
-        
-        // Set gravity factor
-        SetComponent(entity, new PhysicsGravityFactor
-        {
-            Value = 1f
-        });
 
+
+        AddComponent(entity, new PlayerSpeed
+        {
+            currentSpeed = 0f,
+            maxSpeed = 200f,
+            acceleration = authoring.moveSpeed
+        });
     }
+}
+public struct PlayerSpeed : IComponentData
+{
+    [GhostField] public float currentSpeed;
+    public float maxSpeed;
+    public float acceleration;
 }
 public struct PlayerInputVector : IInputComponentData
 {
     public float2 inputVector;
 }
-public struct PlayerMoveSpeed : IComponentData
+public class PlayerGOPrefab : IComponentData
 {
-    public float moveSpeed;
+    public GameObject Prefab;
+}
+public class PlayerGOPrefabSelector : IComponentData
+{
+    public GameObject PrefabA;
+    public GameObject PrefabB;
+}
+public class PlayerAnimatorReference : ICleanupComponentData
+{
+    public Animator Animator;
+}
+public class PlayerTransformReference : IComponentData
+{
+    public Transform Transform;
 }
 public struct InitializePlayerTag : IComponentData, IEnableableComponent { }
 public struct PlayerTag : IComponentData { }

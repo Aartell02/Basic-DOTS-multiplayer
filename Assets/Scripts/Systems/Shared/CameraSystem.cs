@@ -1,13 +1,15 @@
+using Unity.Collections;
 using Unity.Entities;
-using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.NetCode;
-using UnityEngine;
+using Unity.Transforms;
 using Unity.VisualScripting;
+using UnityEngine;
 
 [UpdateInGroup(typeof(InitializationSystemGroup))] 
 public partial struct CameraInitializationSystem : ISystem
 {
+    //
     public void OnUpdate(ref SystemState state)
     {
         if (CameraTargetSingleton.Instance == null) return;
@@ -15,7 +17,7 @@ public partial struct CameraInitializationSystem : ISystem
         foreach (var (cameraTarget, shouldInitialize, entity) 
             in SystemAPI.Query<RefRW<CameraTarget>, EnabledRefRW<InitializeCameraTargetTag>>().WithAll<GhostOwnerIsLocal>().WithEntityAccess())
         {
-            cameraTarget.ValueRW.CameraTransform = cameraTargetTransform;
+            //cameraTarget.ValueRW.CameraTransform = cameraTargetTransform;
             shouldInitialize.ValueRW = false;
         }
     }
@@ -25,14 +27,20 @@ public partial struct MoveCameraSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)
     {
-        foreach(var(transform,cameraTarget) 
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
+        foreach (var(transform,cameraTarget) 
             in SystemAPI.Query<LocalToWorld,CameraTarget>().WithAll<PlayerTag>().WithNone<InitializeCameraTargetTag>())
         {
-            Debug.Log($"camera{state.DebugName}");
+            // Block till there's no NaN's
+            float3 pos = transform.Position;
+            if (math.any(math.isnan(pos)))
+            {
+                continue;
+            }
+            //Debug.Log($"camera{state.DebugName}");
             cameraTarget.CameraTransform.Value.position = transform.Position;
             
-            //Also set up the camera's FollowTarget component if it exists
-
+            //Set up the camera's FollowTarget component if it exists
             var camera = Camera.main;
             if (camera != null)
             {
@@ -43,22 +51,6 @@ public partial struct MoveCameraSystem : ISystem
                 }
             }
             
-        }
-        foreach (var (playerPrefab, entity) 
-            in SystemAPI.Query<PlayerGOPrefab>().WithEntityAccess())
-        {
-            Debug.Log($"gameobjcet{state.DebugName}");
-            var go = playerPrefab;
-            if (go != null)
-            {
-                var transform = go.Prefab.transform;
-                          // Dodatkowo ustaw kamerê g³ówn¹
-                var camera = Camera.main;
-                if (camera != null)
-                {
-                    transform = camera.transform;
-                }
-            }
         }
     }
 }

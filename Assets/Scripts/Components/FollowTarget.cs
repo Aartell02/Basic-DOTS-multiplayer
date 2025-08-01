@@ -12,9 +12,7 @@ public class FollowTarget : MonoBehaviour
         if (target != null)
         {
             Vector3 desiredPosition = target.position + offset;
-            //transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
             transform.position = desiredPosition;
-            //transform.LookAt(target);
         }
     }
 }

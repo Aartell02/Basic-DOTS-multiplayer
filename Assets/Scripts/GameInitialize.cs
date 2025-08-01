@@ -11,17 +11,7 @@ public class GameInitialize : ClientServerBootstrap
     {
         DefaultConnectAddress = NetworkEndpoint.LoopbackIpv4;
         AutoConnectPort = 7979;
-
-        if (!Application.isEditor)
-        {
-            DefaultListenAddress = NetworkEndpoint.AnyIpv4;
-            Debug.Log("[Bootstrap] Server+Client on port 7979");
-        }
-        else
-        {
-            Debug.Log("[Bootstrap] Editor Play: Client only");
-        }
-
+        Debug.Log($"[Game Initialize] Port = 7979");
         return base.Initialize(defaultWorldName);
     }
 }

@@ -7,7 +7,7 @@ public class CameraTargetSingleton : MonoBehaviour
     {
         if(Instance != null)
         {
-            Debug.LogWarning("Multiple instances of cameratargetsingleton detected. Destroying new instance", Instance);
+            //Debug.LogWarning("Multiple instances of cameratargetsingleton detected. Destroying new instance", Instance);
             Destroy(gameObject);
             return;
         }
